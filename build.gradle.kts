@@ -33,7 +33,8 @@ compose.desktop {
 				TargetFormat.Dmg,
 				TargetFormat.Msi,
 				TargetFormat.Deb,
-				TargetFormat.Exe
+				TargetFormat.Exe,
+				TargetFormat.AppImage
 			)
 			packageName = "read_desktop"
 			packageVersion = "1.0.0"
