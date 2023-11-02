@@ -1,3 +1,4 @@
+import java.nio.charset.Charset
 import javax.usb.UsbDevice
 import javax.usb.UsbEndpoint
 import javax.usb.UsbHostManager
@@ -7,27 +8,29 @@ import kotlin.concurrent.thread
 lateinit var printUsbDevice: UsbDevice
 fun main() {
 	val rootUsbHub = UsbHostManager.getUsbServices().rootUsbHub
+	// M108 - 8E:E0:04:2A:B8:EE
+	val vid: Short = 0x0483
+	val pid: Short = 0x5740
 	rootUsbHub.attachedUsbDevices.forEach {
 		if (it is UsbDevice) {
 			val descriptor = it.usbDeviceDescriptor
 			// 设备管理器中,具体USB >> 属性 >> 硬件ID >>  对应的 USB\VID_{vid}&PID_{pid}(16进制)
-			// 输出时0会被去掉,无关紧要
-			val vid = descriptor.idVendor().toString(16).uppercase()
-			val pid = descriptor.idProduct().toString(16).uppercase()
-			println("vid:$vid\tpid:$pid")
-			if (vid == "483" && pid == "5740") {
+			val idVendor = descriptor.idVendor().toString(16).uppercase()
+			val idProduct = descriptor.idProduct().toString(16).uppercase()
+			println("device vid:$idVendor, pid: $idProduct")
+			if (vid == descriptor.idVendor() && pid == descriptor.idProduct()) {
 				printUsbDevice = it
 				return@forEach
 			}
 		}
 	}
 	if (!::printUsbDevice.isInitialized) {
-		println("未找到对应设备")
+		println("No corresponding device found")
 		return
 	}
 	val usbInterfaces = printUsbDevice.activeUsbConfiguration.usbInterfaces
 	if (usbInterfaces.isEmpty()) {
-		println("此配置没有usb接口")
+		println("This configuration does not have a usb interface")
 		return
 	}
 	val interFace = usbInterfaces[0]
@@ -53,10 +56,14 @@ fun main() {
 
 	try {
 		thread {
-			val buffer = ByteArray(64)
+			val buffer = ByteArray(4)
 			while (true) {
-				val submit = readPipe.syncSubmit(buffer)
-				println(submit)
+				val bytes = readPipe.asyncSubmit(buffer).data
+				bytes.map { val char = it.toInt()
+					print(char)
+				}
+				println()
+				Thread.sleep(1000)
 			}
 		}
 	} catch (e: Exception) {
