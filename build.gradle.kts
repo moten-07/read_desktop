@@ -1,3 +1,4 @@
+import groovy.json.JsonGenerator.Options
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -20,8 +21,7 @@ dependencies {
 	// (in a separate module for demo project and in testMain).
 	// With compose.desktop.common you will also lose @Preview functionality
 	implementation(compose.desktop.currentOs)
-	// https://mvnrepository.com/artifact/com.neuronrobotics/nrjavaserial
-	implementation("com.neuronrobotics:nrjavaserial:5.2.1")
+	implementation("org.usb4java:usb4java-javax:1.3.0")
 }
 
 compose.desktop {
@@ -30,11 +30,8 @@ compose.desktop {
 
 		nativeDistributions {
 			targetFormats(
-				TargetFormat.Dmg,
-				TargetFormat.Msi,
-				TargetFormat.Deb,
 				TargetFormat.Exe,
-				TargetFormat.AppImage
+				TargetFormat.Msi,
 			)
 			packageName = "read_desktop"
 			packageVersion = "1.0.0"
