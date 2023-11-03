@@ -1,4 +1,3 @@
-import java.nio.charset.Charset
 import javax.usb.UsbDevice
 import javax.usb.UsbEndpoint
 import javax.usb.UsbHostManager
@@ -59,7 +58,8 @@ fun main() {
 			val buffer = ByteArray(4)
 			while (true) {
 				val bytes = readPipe.asyncSubmit(buffer).data
-				bytes.map { val char = it.toInt()
+				bytes.map {
+					val char = it.toInt()
 					print(char)
 				}
 				println()
