@@ -1,5 +1,5 @@
-import groovy.json.JsonGenerator.Options
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	kotlin("jvm")
@@ -32,9 +32,17 @@ compose.desktop {
 			targetFormats(
 				TargetFormat.Exe,
 				TargetFormat.Msi,
+				TargetFormat.Dmg,
+				TargetFormat.AppImage
 			)
 			packageName = "read_desktop"
 			packageVersion = "1.0.0"
 		}
+	}
+}
+
+tasks.withType<KotlinCompile>{
+	kotlinOptions {
+		jvmTarget = JavaVersion.VERSION_17.toString()
 	}
 }
