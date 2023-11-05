@@ -34,12 +34,13 @@ fun yCoordination(height: Float, y: Float, maxValue: Float): Float {
  */
 @Composable
 fun LineChart(
+	modifier: Modifier = Modifier,
 	data: List<Offset> = listOf()
 ) {
 	if (data.isEmpty()) return
 	Card(
 		shape = RoundedCornerShape(2),
-		modifier = Modifier
+		modifier = modifier
 			.fillMaxWidth()
 			.padding(15.dp)
 	) {

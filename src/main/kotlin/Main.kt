@@ -24,7 +24,6 @@ import androidx.compose.ui.window.rememberWindowState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import org.jetbrains.skia.Point
 import javax.usb.UsbDevice
 import javax.usb.UsbHostManager
 
@@ -75,20 +74,52 @@ fun Right(
 ) {
 	Column(modifier = modifier.fillMaxSize()) {
 		Row(modifier = Modifier.weight(1f)) {
-			LineChart(data = listOf(
-					Offset(10F, 20F),
-					Offset(10F, 20F),
-					Offset(10F, 20F),
-					Offset(10F, 20F),
-					Offset(10F, 20F),
-					Offset(10F, 20F)
+			LineChart(
+				modifier = Modifier.weight(1f),
+				data = listOf(
+					Offset(0F, (0..4).random().toFloat()),
+					Offset(1F, (0..4).random().toFloat()),
+					Offset(2F, (0..4).random().toFloat()),
+					Offset(3F, (0..4).random().toFloat()),
+					Offset(4F, (0..4).random().toFloat()),
+					Offset(5F, (0..4).random().toFloat())
 				)
 			)
-			LineChart()
+			LineChart(
+				modifier = Modifier.weight(1f),
+				data = listOf(
+					Offset(0F, (0..4).random().toFloat()),
+					Offset(1F, (0..4).random().toFloat()),
+					Offset(2F, (0..4).random().toFloat()),
+					Offset(3F, (0..4).random().toFloat()),
+					Offset(4F, (0..4).random().toFloat()),
+					Offset(5F, (0..4).random().toFloat())
+				)
+			)
 		}
 		Row(modifier = Modifier.weight(1f)) {
-			LineChart()
-			LineChart()
+			LineChart(
+				modifier = Modifier.weight(1f),
+				data = listOf(
+					Offset(0F, (0..4).random().toFloat()),
+					Offset(1F, (0..4).random().toFloat()),
+					Offset(2F, (0..4).random().toFloat()),
+					Offset(3F, (0..4).random().toFloat()),
+					Offset(4F, (0..4).random().toFloat()),
+					Offset(5F, (0..4).random().toFloat())
+				)
+			)
+			LineChart(
+				modifier = Modifier.weight(1f),
+				data = listOf(
+					Offset(0F, (0..4).random().toFloat()),
+					Offset(1F, (0..4).random().toFloat()),
+					Offset(2F, (0..4).random().toFloat()),
+					Offset(3F, (0..4).random().toFloat()),
+					Offset(4F, (0..4).random().toFloat()),
+					Offset(5F, (0..4).random().toFloat())
+				)
+			)
 		}
 	}
 }
