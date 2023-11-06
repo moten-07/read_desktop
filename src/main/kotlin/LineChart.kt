@@ -19,11 +19,22 @@ import kotlin.math.log
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
-
+/**
+ * 均分后的x轴位置
+ * @param width x轴禅读
+ * @param x x轴位置
+ * @param totalCount x轴长度
+ */
 fun xCoordination(width: Float, x: Float, totalCount: Int): Float {
 	return width * (x / (totalCount - 1))
 }
 
+/**
+ * 均分后的Y轴
+ * [height] Y轴长度
+ * [y] 传入y轴位置
+ * [maxValue] 最大值
+ */
 fun yCoordination(height: Float, y: Float, maxValue: Float): Float {
 	return height - y * (height / maxValue)
 }
@@ -35,7 +46,8 @@ fun yCoordination(height: Float, y: Float, maxValue: Float): Float {
 @Composable
 fun LineChart(
 	modifier: Modifier = Modifier,
-	data: List<Offset> = listOf()
+	data: List<Offset> = listOf(),
+	lineColor: Color = Color.Red
 ) {
 	if (data.isEmpty()) return
 	Card(
@@ -50,6 +62,7 @@ fun LineChart(
 
 		Canvas(modifier = Modifier
 			.fillMaxSize()
+			.padding(10.dp)
 			.pointerInput(Unit) {
 				detectTapGestures(onPress = { offset ->
 					position = offset
@@ -58,7 +71,7 @@ fun LineChart(
 			}) {
 
 
-			val maxValue = data.maxOf { d -> d.y }
+			val maxValue = 4F
 
 			drawYLabels(maxValue)
 
@@ -83,7 +96,7 @@ fun LineChart(
 			}
 			drawPath(
 				path,
-				color = Color.Red,
+				color = lineColor,
 				style = Stroke(width = 4f, cap = StrokeCap.Round)
 			)
 //			path.lineTo(size.width, size.height)

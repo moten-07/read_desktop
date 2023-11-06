@@ -1,3 +1,4 @@
+import groovy.json.JsonGenerator.Options
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -33,6 +34,7 @@ compose.desktop {
 				TargetFormat.Exe,
 				TargetFormat.Msi,
 				TargetFormat.Dmg,
+				TargetFormat.Deb,
 				TargetFormat.AppImage
 			)
 			packageName = "read_desktop"
