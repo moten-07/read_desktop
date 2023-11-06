@@ -51,12 +51,12 @@ fun main() = application {
 	val scope = rememberCoroutineScope()
 	scope.launch {
 		// 随机数据
-//		repeat(100) {
-//			processingData(data = data1, dataFlow = dataFlow1)
-//			processingData(data = data2, dataFlow = dataFlow2)
-//			processingData(data = data3, dataFlow = dataFlow3)
-//			processingData(data = data4, dataFlow = dataFlow4)
-//		}
+		repeat(100) {
+			processingData(data = data1, dataFlow = dataFlow1)
+			processingData(data = data2, dataFlow = dataFlow2)
+			processingData(data = data3, dataFlow = dataFlow3)
+			processingData(data = data4, dataFlow = dataFlow4)
+		}
 
 		usbDeviceFlow.collect {
 			println("=======")
@@ -177,25 +177,21 @@ fun Right(
 		Row(modifier = Modifier.weight(1f)) {
 			LineChart(
 				modifier = Modifier.weight(1f),
-				data = data1,
-				lineColor = Color.Red
+				data = data1
 			)
 			LineChart(
 				modifier = Modifier.weight(1f),
-				data = data2,
-				lineColor = Color.Green
+				data = data2
 			)
 		}
 		Row(modifier = Modifier.weight(1f)) {
 			LineChart(
 				modifier = Modifier.weight(1f),
-				data = data3,
-				lineColor = Color.Blue
+				data = data3
 			)
 			LineChart(
 				modifier = Modifier.weight(1f),
-				data = data4,
-				lineColor = Color.Yellow
+				data = data4
 			)
 		}
 	}

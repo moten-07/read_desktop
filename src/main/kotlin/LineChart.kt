@@ -99,12 +99,11 @@ fun LineChart(
 				color = lineColor,
 				style = Stroke(width = 4f, cap = StrokeCap.Round)
 			)
-//			path.lineTo(size.width, size.height)
-//			path.lineTo(
-//				xCoordination(size.width, data[0].x, data.size),
-//				size.height
-//			)
-			path.close()
+			path.lineTo(size.width, size.height)
+			path.lineTo(
+				xCoordination(size.width, data[0].x, data.size),
+				size.height
+			)
 			// 绘制成封闭区间会好看点
 //			drawPath(
 //				path,
@@ -115,6 +114,7 @@ fun LineChart(
 //					)
 //				)
 //			)
+			path.close()
 
 
 		}
