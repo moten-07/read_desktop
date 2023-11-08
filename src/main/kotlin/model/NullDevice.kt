@@ -1,3 +1,5 @@
+package model
+
 import javax.usb.*
 import javax.usb.event.UsbDeviceListener
 

@@ -1,3 +1,5 @@
+package ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,7 +9,10 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.lightColors
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -19,11 +24,11 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
+import model.NullDevice
 import javax.usb.UsbDevice
 import javax.usb.UsbEndpoint
 import javax.usb.UsbHostManager
 import javax.usb.UsbInterface
-import kotlin.coroutines.EmptyCoroutineContext
 
 fun main() = application {
     val windowState = rememberWindowState(size = DpSize(width = 1200.dp, height = 720.dp))
@@ -51,12 +56,12 @@ fun main() = application {
 
     scope.launch(handler) {
         // 随机数据
-//		repeat(100) {
-//			processingData(data = data1, dataFlow = dataFlow1)
-//			processingData(data = data2, dataFlow = dataFlow2)
-//			processingData(data = data3, dataFlow = dataFlow3)
-//			processingData(data = data4, dataFlow = dataFlow4)
-//		}
+//	    repeat(100) {
+//		    processingData(data = data1, dataFlow = dataFlow1)
+//		    processingData(data = data2, dataFlow = dataFlow2)
+//		    processingData(data = data3, dataFlow = dataFlow3)
+//		    processingData(data = data4, dataFlow = dataFlow4)
+//	    }
 
         usbDeviceFlow.collect {
             if (it is NullDevice) return@collect
@@ -89,7 +94,7 @@ fun main() = application {
                 var index = 0
 
                 while (true) {
-                    val bytes = usbPipe.asyncSubmit(ByteArray(4)).data
+	                val bytes = usbPipe.asyncSubmit(ByteArray(3)).data
                     print("${index++}==>")
                     bytes.map { byte ->
                         print(byte.toInt())
@@ -107,16 +112,16 @@ fun main() = application {
     }
 
     Window(
-            state = windowState,
-            onCloseRequest = ::exitApplication,
-            icon = painterResource("icon.png"),
-            title = "ReadForUSB"
+	    state = windowState,
+	    onCloseRequest = ::exitApplication,
+	    icon = painterResource("icon.png"),
+	    title = "ReadForUSB"
     ) {
         val ratio = windowState.size.width / windowState.size.height
         UsbApp(
-                modifier = Modifier.aspectRatio(ratio = ratio),
-                usbDeviceFlow = usbDeviceFlow,
-                data = Data(data1, data2, data3, data4)
+	        modifier = Modifier.aspectRatio(ratio = ratio),
+	        usbDeviceFlow = usbDeviceFlow,
+	        list = listOf(data1)
         )
     }
 }
@@ -129,9 +134,7 @@ fun main() = application {
  * 数据流处理: 超出时移除第一个点位并整体往前移动
  */
 private suspend fun processingData(
-        data: List<Offset>,
-        maxPort: Int = 30,
-        dataFlow: MutableStateFlow<List<Offset>>
+	data: List<Offset>, maxPort: Int = 30, dataFlow: MutableStateFlow<List<Offset>>
 ) {
 
     val list = arrayListOf<Offset>().let {
@@ -149,26 +152,20 @@ private suspend fun processingData(
 
 @Composable
 fun UsbApp(
-        modifier: Modifier = Modifier,
-        usbDeviceFlow: MutableStateFlow<UsbDevice>,
-        data: Data
+	modifier: Modifier = Modifier, usbDeviceFlow: MutableStateFlow<UsbDevice>, list: List<List<Offset>>
 ) {
 
     val colors = lightColors()
     MaterialTheme(colors = colors) {
         Row(modifier = modifier.fillMaxSize()) {
             Left(
-                    modifier = Modifier.weight(1f),
-                    usbDeviceFlow = usbDeviceFlow
+	            modifier = Modifier.weight(1f), usbDeviceFlow = usbDeviceFlow
             )
             Box(
-                    modifier = Modifier.fillMaxHeight()
-                            .width(1.dp)
-                            .background(color = Color.Black)
+	            modifier = Modifier.fillMaxHeight().width(1.dp).background(color = Color.Black)
             )
             Right(
-                    modifier = Modifier.weight(3f),
-                    data = data
+	            modifier = Modifier.weight(3f), list = list
             )
         }
     }
@@ -176,39 +173,31 @@ fun UsbApp(
 
 @Composable
 fun Right(
-        modifier: Modifier = Modifier,
-        data: Data
+	modifier: Modifier = Modifier,
+	list: List<List<Offset>>
 ) {
-    val (data1, data2, data3, data4) = data
-    Column(modifier = modifier.fillMaxSize()) {
-        Row(modifier = Modifier.weight(1f)) {
-            LineChart(
-                    modifier = Modifier.weight(1f),
-                    data = data1
-            )
-            LineChart(
-                    modifier = Modifier.weight(1f),
-                    data = data2
-            )
-        }
-        Row(modifier = Modifier.weight(1f)) {
-            LineChart(
-                    modifier = Modifier.weight(1f),
-                    data = data3
-            )
-            LineChart(
-                    modifier = Modifier.weight(1f),
-                    data = data4
-            )
-        }
-    }
+	val data = list[0]
+	val columnCount = if(list.size > 2) 2 else list.size
+	val rowCount = if(list.size > 2) 2 else list.size
+	Row(modifier = modifier.fillMaxSize()) {
+		repeat(columnCount) {
+			Column(modifier = Modifier.weight(1f)) {
+				repeat(rowCount) {
+					LineChart(
+						modifier = Modifier.weight(1f), data = data
+					)
+				}
+
+			}
+		}
+	}
 }
 
 @Composable
 fun Left(
-        modifier: Modifier = Modifier,
-        usbDeviceFlow: MutableStateFlow<UsbDevice>,
-        scope: CoroutineScope = rememberCoroutineScope(),
+	modifier: Modifier = Modifier,
+	usbDeviceFlow: MutableStateFlow<UsbDevice>,
+	scope: CoroutineScope = rememberCoroutineScope(),
 ) {
     val devicesFlow = MutableStateFlow(UsbHostManager.getUsbServices().rootUsbHub.attachedUsbDevices.toList())
     val list by devicesFlow.collectAsState()

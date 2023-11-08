@@ -1,4 +1,3 @@
-import groovy.json.JsonGenerator.Options
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -23,6 +22,7 @@ dependencies {
 	// With compose.desktop.common you will also lose @Preview functionality
 	implementation(compose.desktop.currentOs)
 	implementation("org.usb4java:usb4java-javax:1.3.0")
+	implementation("org.hid4java:hid4java:0.7.0")
 }
 
 compose.desktop {
@@ -43,7 +43,7 @@ compose.desktop {
 	}
 }
 
-tasks.withType<KotlinCompile>{
+tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		jvmTarget = JavaVersion.VERSION_17.toString()
 	}
